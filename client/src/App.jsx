@@ -13,22 +13,21 @@ import AuthComponent from './components/auth/AuthComponent';
 const AppRoutes = () => {
   const { user } = useAuth();
 
-  // If user is authenticated, redirect to dashboard from auth page
   const AuthRoute = () => {
     return !user ? <AuthComponent /> : <Navigate to="/dashboard" />;
   };
 
   return (
     <>
-      {/* Only show Navbar when user is authenticated */}
+  
       {user && <Navbar />}
       
       <div className={user ? "container mx-auto px-4 py-8" : ""}>
         <Routes>
-          {/* Auth route */}
+       
           <Route path="/auth" element={<AuthRoute />} />
           
-          {/* Protected routes */}
+        
           <Route path="/dashboard" element={
             <PrivateRoute>
               <Dashboard />
@@ -55,7 +54,7 @@ const AppRoutes = () => {
             </PrivateRoute>
           } />
 
-          {/* Redirect logic */}
+        
           <Route path="/" element={<Navigate to={user ? "/dashboard" : "/auth"} />} />
           <Route path="*" element={<Navigate to={user ? "/dashboard" : "/auth"} />} />
         </Routes>

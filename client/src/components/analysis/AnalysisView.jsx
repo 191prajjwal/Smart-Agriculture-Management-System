@@ -89,7 +89,7 @@ const AnalysisView = () => {
           </div>
         </div>
 
-        {/* Crop Health Card */}
+       
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Crop Health</h2>
           <div className="space-y-4">
@@ -140,7 +140,7 @@ const AnalysisView = () => {
         </div>
       )}
 
-      {/* Recommendations */}
+      
       <div className="bg-white p-6 rounded-lg shadow mt-6">
         <h2 className="text-xl font-semibold mb-4">Recommendations</h2>
         <ul className="list-disc pl-5 space-y-2">
