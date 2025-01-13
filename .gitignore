@@ -1,0 +1,73 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules
+/client/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build output
+/build/
+/dist/
+/client/build/
+/client/dist/
+
+# Cache
+/cache/
+/tmp/
+/client/.next/
+/client/.parcel-cache/
+
+# Debugging files
+*.swp
+*.swo
+.vscode/*
+.idea/
+.DS_Store
+
+# Git-related
+*.orig
+*.rej
+
+# Operating system files
+Thumbs.db
+.DS_Store
+
+# MongoDB database files
+*.lock
+*.log
+data/
+
+# Specific to React
+**/*.env.local
+**/.env.production.local
+
+# Miscellaneous
+*.bak
+*.backup
+*.tmp
+*.swp
+
+# Lint and testing
+/.eslintcache
+/coverage
+.nyc_output
+
+# TypeScript
+*.tsbuildinfo
