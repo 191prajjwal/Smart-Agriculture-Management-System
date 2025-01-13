@@ -1,36 +1,79 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import Layout from './components/shared/Layout';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import DashboardPage from './pages/DashboardPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import PrivateRoute from './components/common/PrivateRoute';
+import Dashboard from './components/dashboard/Dashboard';
+import FieldManagement from './components/fields/FieldManagement';
+import AnalysisView from './components/analysis/AnalysisView';
+import SubscriptionPlans from './components/subscription/SubscriptionPlans';
+import PaymentHistory from './components/subscription/PaymentHistory';
+import Navbar from './components/common/Navbar';
+import AuthComponent from './components/auth/AuthComponent';
 
-// Protected Route component
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  return isAuthenticated ? <Layout>{children}</Layout> : <Navigate to="/login" />;
-};
+const AppRoutes = () => {
+  const { user } = useAuth();
 
-const App = () => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  // If user is authenticated, redirect to dashboard from auth page
+  const AuthRoute = () => {
+    return !user ? <AuthComponent /> : <Navigate to="/dashboard" />;
+  };
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" />} />
-        <Route path="/register" element={!isAuthenticated ? <RegisterPage /> : <Navigate to="/dashboard" />} />
-        
-        {/* Protected Routes */}
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        } />
-        
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
-      </Routes>
-    </Router>
+    <>
+      {/* Only show Navbar when user is authenticated */}
+      {user && <Navbar />}
+      
+      <div className={user ? "container mx-auto px-4 py-8" : ""}>
+        <Routes>
+          {/* Auth route */}
+          <Route path="/auth" element={<AuthRoute />} />
+          
+          {/* Protected routes */}
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/fields" element={
+            <PrivateRoute>
+              <FieldManagement />
+            </PrivateRoute>
+          } />
+          <Route path="/analysis/:fieldId" element={
+            <PrivateRoute>
+              <AnalysisView />
+            </PrivateRoute>
+          } />
+          <Route path="/subscription" element={
+            <PrivateRoute>
+              <SubscriptionPlans />
+            </PrivateRoute>
+          } />
+          <Route path="/payments" element={
+            <PrivateRoute>
+              <PaymentHistory />
+            </PrivateRoute>
+          } />
+
+          {/* Redirect logic */}
+          <Route path="/" element={<Navigate to={user ? "/dashboard" : "/auth"} />} />
+          <Route path="*" element={<Navigate to={user ? "/dashboard" : "/auth"} />} />
+        </Routes>
+      </div>
+    </>
   );
 };
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <AppRoutes />
+        </div>
+      </Router>
+    </AuthProvider>
+  );
+}
 
 export default App;
