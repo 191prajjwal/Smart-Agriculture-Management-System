@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../utils/api';
-import { LineChart, XAxis, YAxis, CartesianGrid,ResponsiveContainer, Line, Tooltip, Legend } from 'recharts';
+import SoilHealthTrends from './SoilHealthTrends';
 
 const AnalysisView = () => {
   const { fieldId } = useParams();
@@ -117,88 +117,8 @@ const AnalysisView = () => {
           </div>
         </div>
       </div>
-     {soilHealthTrends && soilHealthTrends.length > 0 ? (
-  <div className="bg-white p-6 rounded-lg shadow mt-6">
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-xl font-semibold">Soil Health Trends</h2>
-      <select 
-        className="border rounded p-1"
-        onChange={(e) => {
-          fetchData(e.target.value);
-        }}
-      >
-        <option value="1month">Last Month</option>
-        <option value="3months">Last 3 Months</option>
-        <option value="6months">Last 6 Months</option>
-        <option value="1year">Last Year</option>
-      </select>
-    </div>
-    <div className="w-full h-[400px] "> 
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={soilHealthTrends}
-          margin={{ top: 5, right: 30, left: 20, bottom: 70 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="date" 
-            angle={-45}
-            textAnchor="end"
-            height={80}
-            tick={{ dy: 10 }}
-          />
-          <YAxis />
-          <Tooltip />
-          <Legend
-          
-          verticalAlign="top" 
-          height={36} 
-          wrapperStyle={{ 
-            paddingTop: '2px',  
-            bottom: 0
-          }}
-
-          />
-         
-          <Line 
-            type="monotone" 
-            dataKey="ph" 
-            stroke="#8884d8" 
-            name="pH"
-            strokeWidth={2}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="moisture" 
-            stroke="#82ca9d" 
-            name="Moisture %"
-            strokeWidth={2}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="nitrogen" 
-            stroke="#ffc658" 
-            name="Nitrogen"
-            strokeWidth={2}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="phosphorus" 
-            stroke="#ff7300" 
-            name="Phosphorus"
-            strokeWidth={2}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="potassium" 
-            stroke="#0088fe" 
-            name="Potassium"
-            strokeWidth={2}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  </div>
+      {soilHealthTrends && soilHealthTrends.length > 0 ? (
+  <SoilHealthTrends fieldId={fieldId} />
 ) : (
   <div className="bg-white p-6 rounded-lg shadow mt-6">
     <h2 className="text-xl font-semibold mb-4">Soil Health Trends</h2>

@@ -32,6 +32,10 @@ exports.getSoilHealthTrends = async (req, res) => {
     try {
         const { fieldId } = req.params;
         const timespan = req.query.timespan || '6months'; 
+        
+        console.log('Fetching trends for fieldId:', fieldId);
+        console.log('Timespan:', timespan);
+        
         const endDate = new Date();
         const startDate = new Date();
         
@@ -50,6 +54,8 @@ exports.getSoilHealthTrends = async (req, res) => {
                 break;
         }
 
+        console.log('Date range:', { startDate, endDate });
+
         const analyses = await Analysis.find({
             fieldId,
             analysisDate: {
@@ -58,7 +64,8 @@ exports.getSoilHealthTrends = async (req, res) => {
             }
         }).sort('analysisDate');
 
-       
+        console.log('Found analyses:', analyses.length);
+
         const trends = analyses.map(analysis => ({
             date: analysis.analysisDate.toISOString().split('T')[0], 
             ph: analysis.soilHealth.ph.value,
@@ -68,8 +75,11 @@ exports.getSoilHealthTrends = async (req, res) => {
             moisture: analysis.soilHealth.moisture.percentage
         }));
 
+        console.log('Processed trends:', trends);
+
         res.json(trends);
     } catch (error) {
+        console.error('Error in getSoilHealthTrends:', error);
         res.status(500).json({ message: error.message });
     }
 };
