@@ -1,12 +1,9 @@
 const Analysis = require('../models/analysisModel');
 const Field = require('../models/fieldModel');
 
-
 const randomRange = (min, max) => {
     return Math.random() * (max - min) + min;
 };
-
-
 
 const generateSoilHealthData = () => {
     const ph = randomRange(5.5, 7.5);
@@ -37,7 +34,6 @@ const generateSoilHealthData = () => {
     };
 };
 
-
 const generateCropHealthData = (cropType) => {
     const ndviValue = randomRange(0.3, 0.9);
     const ndviStatus = 
@@ -65,11 +61,9 @@ const generateCropHealthData = (cropType) => {
     };
 };
 
-
 const generateRecommendations = (soilHealth, cropHealth) => {
     const recommendations = [];
 
-  
     if (soilHealth.ph.status === 'poor') {
         recommendations.push('Consider applying lime to increase soil pH');
     }
@@ -80,7 +74,6 @@ const generateRecommendations = (soilHealth, cropHealth) => {
         recommendations.push('Increase irrigation frequency');
     }
 
-  
     if (cropHealth.ndvi.status === 'poor') {
         recommendations.push('Investigate potential nutrient deficiencies');
     }
@@ -95,6 +88,19 @@ const generateRecommendations = (soilHealth, cropHealth) => {
 };
 
 
+const generateAnalysis = async (field) => {
+    const soilHealth = generateSoilHealthData();
+    const cropHealth = generateCropHealthData(field.cropType);
+    const recommendations = generateRecommendations(soilHealth, cropHealth);
+
+    return await Analysis.create({
+        fieldId: field._id,
+        soilHealth,
+        cropHealth,
+        recommendations
+    });
+};
+
 exports.analyzeField = async (req, res) => {
     try {
         const field = await Field.findOne({
@@ -106,24 +112,12 @@ exports.analyzeField = async (req, res) => {
             return res.status(404).json({ message: 'Field not found' });
         }
 
-     
-        const soilHealth = generateSoilHealthData();
-        const cropHealth = generateCropHealthData(field.cropType);
-        const recommendations = generateRecommendations(soilHealth, cropHealth);
-
-        const analysis = await Analysis.create({
-            fieldId: field._id,
-            soilHealth,
-            cropHealth,
-            recommendations
-        });
-
+        const analysis = await generateAnalysis(field);
         res.status(201).json(analysis);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 exports.getFieldAnalysisHistory = async (req, res) => {
     try {
@@ -137,15 +131,23 @@ exports.getFieldAnalysisHistory = async (req, res) => {
     }
 };
 
-
 exports.getLatestAnalysis = async (req, res) => {
     try {
-        const analysis = await Analysis.findOne({
+        
+        let analysis = await Analysis.findOne({
             fieldId: req.params.fieldId
         }).sort({ analysisDate: -1 });
 
+        
         if (!analysis) {
-            return res.status(404).json({ message: 'No analysis found for this field' });
+            const field = await Field.findOne({ _id: req.params.fieldId });
+            
+            if (!field) {
+                return res.status(404).json({ message: 'Field not found' });
+            }
+
+            
+            analysis = await generateAnalysis(field);
         }
 
         res.json(analysis);

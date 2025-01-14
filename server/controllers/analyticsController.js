@@ -1,4 +1,3 @@
-// controllers/analyticsController.js
 const Field = require('../models/fieldModel');
 const Analysis = require('../models/analysisModel');
 
@@ -35,6 +34,7 @@ exports.getSoilHealthTrends = async (req, res) => {
         const timespan = req.query.timespan || '6months'; 
         const endDate = new Date();
         const startDate = new Date();
+        
         switch(timespan) {
             case '1month':
                 startDate.setMonth(endDate.getMonth() - 1);
@@ -50,7 +50,6 @@ exports.getSoilHealthTrends = async (req, res) => {
                 break;
         }
 
-        
         const analyses = await Analysis.find({
             fieldId,
             analysisDate: {
@@ -59,23 +58,15 @@ exports.getSoilHealthTrends = async (req, res) => {
             }
         }).sort('analysisDate');
 
-        const trends = {
-            dates: [],
-            ph: [],
-            nitrogen: [],
-            phosphorus: [],
-            potassium: [],
-            moisture: []
-        };
-
-        analyses.forEach(analysis => {
-            trends.dates.push(analysis.analysisDate);
-            trends.ph.push(analysis.soilHealth.ph.value);
-            trends.nitrogen.push(analysis.soilHealth.nutrients.nitrogen);
-            trends.phosphorus.push(analysis.soilHealth.nutrients.phosphorus);
-            trends.potassium.push(analysis.soilHealth.nutrients.potassium);
-            trends.moisture.push(analysis.soilHealth.moisture.percentage);
-        });
+       
+        const trends = analyses.map(analysis => ({
+            date: analysis.analysisDate.toISOString().split('T')[0], 
+            ph: analysis.soilHealth.ph.value,
+            nitrogen: analysis.soilHealth.nutrients.nitrogen,
+            phosphorus: analysis.soilHealth.nutrients.phosphorus,
+            potassium: analysis.soilHealth.nutrients.potassium,
+            moisture: analysis.soilHealth.moisture.percentage
+        }));
 
         res.json(trends);
     } catch (error) {
