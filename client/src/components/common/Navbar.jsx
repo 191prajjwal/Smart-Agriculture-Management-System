@@ -17,7 +17,7 @@ const Navbar = () => {
   return (
     <nav className="bg-green-600 text-white shadow-lg">
       <div className="container mx-auto px-6 py-3 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold">
+        <Link to="/" className="text-xl font-bold" title="Go to home">
           AgriSmart
         </Link>
 
