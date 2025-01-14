@@ -102,10 +102,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = useCallback(() => {
-    localStorage.removeItem(TOKEN_KEY);
+
+
+    if (window.confirm('Are you sure you want to Logout?'))
+   { localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setAuthHeader(null);
-    setUser(null);
+    setUser(null);}
   }, [setAuthHeader]);
 
   const value = {
