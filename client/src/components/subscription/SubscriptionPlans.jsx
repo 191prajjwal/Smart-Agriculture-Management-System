@@ -44,7 +44,7 @@ const SubscriptionPlans = () => {
               razorpay_signature: response.razorpay_signature
             });
             alert('Payment successful!');
-            // Refresh user data or subscription status
+
           } catch (error) {
             alert('Payment verification failed');
           }
