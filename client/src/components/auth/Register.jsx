@@ -109,7 +109,7 @@ const Register = ({ onLoginClick }) => {
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emerald-500"
           >
             <option value="farmer">Farmer</option>
-            <option value="expert">Expert</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
