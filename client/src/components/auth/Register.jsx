@@ -36,7 +36,7 @@ const Register = ({ onLoginClick }) => {
       }, 2000);
       
     } catch (err) {
-      setError(err.message || 'Failed to create account');
+      setError(err.response?.data?.message || 'Failed to create account');
       setLoading(false);
     }
   };
