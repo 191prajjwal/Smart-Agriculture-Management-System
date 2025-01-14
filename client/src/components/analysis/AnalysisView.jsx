@@ -47,7 +47,7 @@ const AnalysisView = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-mono">AI Analysis of {field.name[0].toUpperCase()+field.name.slice(1)}  </h1>
+        <h1 className="text-3xl font-sans">AI Analysis of {field.name[0].toUpperCase()+field.name.slice(1)}  </h1>
         <button
           onClick={runAnalysis}
           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
